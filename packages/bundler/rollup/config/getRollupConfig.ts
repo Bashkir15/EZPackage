@@ -9,6 +9,7 @@ import replacePlugin from '@rollup/plugin-replace'
 import { RollupOptions} from 'rollup'
 
 import { SCRIPT_EXTENSIONS } from '../../../constants'
+import createDependencyManager from './createDependencyManager'
 import getRollupEnv from './getRollupEnv'
 
 let cache
@@ -20,22 +21,21 @@ export default function getRollupConfig(options) : RollupOptions {
         env,
         format,
         input,
-        name,
         output,
-        packageJSON,
+        packageJSON: { dependencies, name, version },
         paths,
         sourcemap,
         target,
-        version
     } = options
+
+    const manageDependency = createDependencyManager({ dependencies, input })
 
     const rollupConfig = {
         // This should be populated with acornJSX when a user is using jsx
         acornInjectPlugins: [],
         cache,
         external(source, importer) {
-            // TODO
-            return false
+            return manageDependency(source, importer)
         },
         input,
         onwarn(warning) {
