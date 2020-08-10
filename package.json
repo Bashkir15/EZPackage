@@ -15,6 +15,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-replace": "^2.3.3",
+    "acorn-jsx": "^5.2.0",
     "builtin-modules": "^3.1.0",
     "chalk": "^4.1.0",
     "path": "^0.12.7",

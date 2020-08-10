@@ -1,5 +1,6 @@
 import * as chalk from 'chalk'
 import * as path from 'path'
+import * as acornJSX from 'acorn-jsx'
 
 import babelPlugin from '@rollup/plugin-babel'
 import commonJSPlugin from '@rollup/plugin-commonjs'
@@ -31,8 +32,7 @@ export default function getRollupConfig(options) : RollupOptions {
     const manageDependency = createDependencyManager({ dependencies, input })
 
     const rollupConfig = {
-        // This should be populated with acornJSX when a user is using jsx
-        acornInjectPlugins: [],
+        acornInjectPlugins: [acornJSX()],
         cache,
         external(source, importer) {
             return manageDependency(source, importer)
