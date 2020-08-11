@@ -16,7 +16,7 @@ import getRollupEnv from './getRollupEnv'
 let cache
 
 // This can be async  if needed for dynamic loading of plugins/library stuff
-export default function getRollupConfig(options) : RollupOptions {
+export default function createRollupConfig(options) : RollupOptions {
     const {
         banner,
         env,
