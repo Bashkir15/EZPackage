@@ -1,0 +1,1 @@
+export { checkRegistryConnection, isExternalNPMRegistry } from './registry'
