@@ -25,6 +25,7 @@
     "p-timeout": "^3.2.0",
     "path": "^0.12.7",
     "rollup": "^2.23.1",
+    "semver": "^7.3.2",
     "std-env": "^2.2.1"
   },
   "devDependencies": {

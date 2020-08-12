@@ -58,6 +58,6 @@ export default function createBaseConfig(args) : ProjectConfig {
         verbose: false,
         watch: false,
         // Use yarn if possible
-        yarn: false
+        useYarn: false
     }
 }

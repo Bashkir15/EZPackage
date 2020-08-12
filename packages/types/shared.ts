@@ -61,7 +61,7 @@ export interface CommonConfig {
     };
     quiet?: boolean;
     verbose?: boolean;
-    yarn?: boolean;
+    useYarn?: boolean;
 };
 
 export interface BundleConfig extends CommonConfig {
@@ -85,6 +85,8 @@ export interface PublishConfig extends CommonConfig {
     enableTwoFactor?: boolean;
     preview?: boolean;
     releaseDraft?: boolean;
+    // Make this actual valid release types
+    releaseType?: string;
     skipTests?: boolean;
     tag?: string;
     testScript?: string;
