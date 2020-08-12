@@ -1,14 +1,17 @@
+import { BundlerTask } from '../types/bundler'
+import { ProjectConfig } from '../types/shared'
+
 import { createRollupTasks, executeRollupCompile, executeRollupWatch } from './rollup'
 
-export default async function bundle(projectConfig) {
-    const { name, version, watch } = projectConfig
+export default async function bundle(projectConfig: ProjectConfig) {
+    const { packageJSON: { name, version }, watch } = projectConfig
 
     // This could just be the task title? 
     console.log(`${watch ? 'Watching' : 'Building'} ${name}-${version}`)
-    const tasks = createRollupTasks(projectConfig)
+    const tasks: BundlerTask[] = createRollupTasks(projectConfig)
 
     if (watch) {
-        const watcher = executeRollupWatch(tasks)
+        const watcher = executeRollupWatch(tasks.map(({ rollupConfig }) => rollupConfig))
         // Potentially convert this to an observable 
         watcher.on('event', event => {
             if (event.code === 'ERROR') {
@@ -18,8 +21,8 @@ export default async function bundle(projectConfig) {
             }
         })
     } else {
-        for (const task of tasks) {
-            await executeRollupCompile(task)
+        for (const { rollupConfig, taskInfo } of tasks) {
+            await executeRollupCompile(rollupConfig)
         }
     }
 }

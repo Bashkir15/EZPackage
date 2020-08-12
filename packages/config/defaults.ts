@@ -1,6 +1,8 @@
 import env from 'std-env'
 
-export default function createBaseConfig() {
+import { ProjectConfig } from '../types/shared'
+
+export default function createBaseConfig(args) : ProjectConfig {
     return {
         // Allows publishing from any branch
         anyBranch: false,
@@ -25,8 +27,11 @@ export default function createBaseConfig() {
             author: '',
             bin: '',
             browser: '',
-            dependencies: null,
-            devDependencies: null,
+            dependencies: {
+                development: null,
+                peer: null,
+                runtime: null
+            },
             main: '',
             module: '',
             name: '',
@@ -42,7 +47,7 @@ export default function createBaseConfig() {
         // Open a github release draft after releasing
         releaseDraft: true,
         // Function to override rollup configuration
-        rollup: (passedConfig = {}, options = {}) => passedConfig,
+        rollup: (passedConfig = {}, options) => passedConfig,
         // Whether test scripts should be skipped before publishing/building
         skipTests: false,
         // Publish under a givien dist-tag

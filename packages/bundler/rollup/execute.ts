@@ -1,6 +1,7 @@
-import { rollup, watch } from 'rollup'
+import { rollup, watch, RollupBuild, RollupOptions } from 'rollup'
 
-async function createBundle(rollupConfig) {
+
+async function createBundle(rollupConfig: RollupOptions) {
     try {
         const bundle = await rollup(rollupConfig)
         return bundle
@@ -9,7 +10,7 @@ async function createBundle(rollupConfig) {
     }
 }
 
-async function writeBundle(bundle, passedConfig) {
+async function writeBundle(bundle: RollupBuild, passedConfig: RollupOptions) {
     try {
         const output = await bundle.write(passedConfig)
         return output
@@ -18,12 +19,12 @@ async function writeBundle(bundle, passedConfig) {
     }
 }
 
-export async function executeRollupCompile(rollupConfig) {
+export async function executeRollupCompile(rollupConfig: RollupOptions) {
     const bundle = await createBundle(rollupConfig)
     // Possibly do something with the stats? Idk.
     return writeBundle(bundle, rollupConfig)
 }
 
-export function executeRollupWatch(rollupConfigs) {
+export function executeRollupWatch(rollupConfigs: RollupOptions[]) {
     return watch(rollupConfigs)
 }
