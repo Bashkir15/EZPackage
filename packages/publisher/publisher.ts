@@ -1,10 +1,10 @@
 import Listr from 'listr'
+import execa from 'execa'
 
 import { bundle } from '../bundler'
 import { gitPush, hasUpstream } from './git'
 import { getPackagePublishArguments, publishPackage } from './npm'
 import { getCleanupTasks, getGitTasks, getInitialTasks, getTestTasks } from './tasks'
-import execa from 'execa'
 
 export default function createPublisher(projectConfig) {
     const { packageJSON, packageManager, preview, releaseType, runCleanup, runBuild, runPublish, runTests, useYarn } = projectConfig
@@ -24,6 +24,13 @@ export default function createPublisher(projectConfig) {
         publisher.add(getCleanupTasks(projectConfig))
     }
 
+    if (runBuild) {
+        publisher.add({
+            task: () => bundle(projectConfig),
+            title: 'Running Rollup Build'
+        })
+    }
+    
     if (runTests) {
         publisher.add(getTestTasks(projectConfig))
     }
