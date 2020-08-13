@@ -1,7 +1,8 @@
 import execa from 'execa'
+import Listr from 'listr'
 
 export default function getTestTasks(projectConfig) {
-    return [{
+    const tasks = [{
         enabled: () => projectConfig.yarn === false,
         task: () => execa('npm', projectConfig.testCommand),
         title: 'Running tests using npm'
@@ -10,4 +11,6 @@ export default function getTestTasks(projectConfig) {
         task: () => execa('yarn', projectConfig.testCommand),
         title: 'Running tests using yarn'
     }]
+
+    return tasks
 }
