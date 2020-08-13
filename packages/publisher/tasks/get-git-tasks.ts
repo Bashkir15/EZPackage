@@ -1,12 +1,13 @@
 import Listr from 'listr'
 
+import { DEFAULT_RELEASE_BRANCHES } from '../../constants'
 import { getCurrentBranch } from '../git'
 import execa from 'execa'
 
 export default function getGitTasks(projectConfig) {
     const tasks = [{
         task: async () => {
-            const allowedBranches = projectConfig.releaseBranch ? [projectConfig.releaseBranch] : ['main', 'master']
+            const allowedBranches = projectConfig.releaseBranch ? [projectConfig.releaseBranch] : DEFAULT_RELEASE_BRANCHES
             const currentBranch = await getCurrentBranch()
             if (!allowedBranches.includes(currentBranch)) {
                 throw new Error(`Not on ${allowedBranches.map(branch => `${branch}`).join('/')} branch`)

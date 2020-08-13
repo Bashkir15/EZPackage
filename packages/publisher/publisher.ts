@@ -2,6 +2,7 @@ import Listr from 'listr'
 import execa from 'execa'
 
 import { bundle } from '../bundler'
+import { PUBLISH_STATUSES } from '../constants'
 import { gitPush, hasUpstream } from './git'
 import { getPackagePublishArguments, publishPackage } from './npm'
 import { getCleanupTasks, getGitTasks, getInitialTasks, getTestTasks } from './tasks'
@@ -9,7 +10,7 @@ import { getCleanupTasks, getGitTasks, getInitialTasks, getTestTasks } from './t
 export default function createPublisher(projectConfig) {
     const { packageJSON, packageManager, preview, releaseType, runCleanup, runBuild, runPublish, runTests, useYarn } = projectConfig
     
-    let publishStatus = 'UNKNOWN'
+    let publishStatus = PUBLISH_STATUSES.Unknown
 
     const publisher = new Listr([{
         enabled: () => runPublish,
@@ -30,7 +31,7 @@ export default function createPublisher(projectConfig) {
             title: 'Running Rollup Build'
         })
     }
-    
+
     if (runTests) {
         publisher.add(getTestTasks(projectConfig))
     }
@@ -68,13 +69,13 @@ export default function createPublisher(projectConfig) {
                 } catch (err) {
                     hasError = true
                 } finally {
-                    publishStatus = hasError ? 'FAILED' : 'SUCCESS'
+                    publishStatus = hasError ? PUBLISH_STATUSES.Failure : PUBLISH_STATUSES.Success
                 }
             },
             title: `Publishing package usage ${packageManager}`
         }])
     } else {
-        publishStatus = 'SUCCESS'
+        publishStatus = PUBLISH_STATUSES.Success
     }
 
     publisher.add({
@@ -88,7 +89,7 @@ export default function createPublisher(projectConfig) {
                 return '[Preview] comand not executed: git push --follow-tags'
             }
 
-            if (publishStatus === 'FAILED' && runPublish) {
+            if (publishStatus === PUBLISH_STATUSES.Failure && runPublish) {
                 return `Couldn't publish package to npm; not pushing`
             }
         },
