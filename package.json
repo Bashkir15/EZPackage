@@ -30,6 +30,7 @@
     "std-env": "^2.2.1"
   },
   "devDependencies": {
+    "@types/listr": "^0.14.2",
     "@types/node": "^14.0.27"
   }
 }

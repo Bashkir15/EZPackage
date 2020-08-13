@@ -3,10 +3,11 @@ export const PRERELEASE_VERSIONS = ['prepatch', 'preminor', 'premajor', 'prerele
 export const SEMVER_INCREMENTS = ['patch', 'minor', 'major', 'prepatch', 'preminor', 'premajor', 'prerelease']
 
 export const DEFAULT_RELEASE_BRANCHES = ['main', 'master']
-export const PUBLISH_STATUSES = {
-    Failure: 'FAILURE',
-    Success: 'SUCCESS',
-    Unknown: 'UNKNOWN'
+
+export enum PUBLISH_STATUSES {
+    Failed = 'FAILED',
+    Success = 'SUCCESS',
+    Unknown = 'UNKNOWN'
 }
 
 export const TYPESCRIPT_EXTENSIONS = ['.ts', '.tsx']

@@ -6,6 +6,7 @@
         "esModuleInterop": true,
         "module": "commonjs",
         "outDir": "build",
+        "strictPropertyInitialization": false,
         "target": "esnext"
     }
 }
