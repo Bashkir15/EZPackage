@@ -4,11 +4,12 @@ import { bundle } from '../bundler'
 import { gitPush, hasUpstream } from './git'
 import { getPackagePublishArguments, publishPackage } from './npm'
 import { getCleanupTasks, getGitTasks, getInitialTasks, getTestTasks } from './tasks'
+import execa from 'execa'
 
 export default function createPublisher(projectConfig) {
-    const { packageJSON, packageManager, preview, runCleanup, runBuild, runPublish, runTests } = projectConfig
+    const { packageJSON, packageManager, preview, releaseType, runCleanup, runBuild, runPublish, runTests, useYarn } = projectConfig
     
-    let publishStatus
+    let publishStatus = 'UNKNOWN'
 
     const publisher = new Listr([{
         enabled: () => runPublish,
@@ -26,6 +27,24 @@ export default function createPublisher(projectConfig) {
     if (runTests) {
         publisher.add(getTestTasks(projectConfig))
     }
+
+    publisher.add([{
+        enabled: () => useYarn,
+        skip: () => {
+            if (preview) {
+                return `[Preview] command not executed: yarn version --new-version ${releaseType}`
+            }
+        },
+        task: () => execa('yarn', ['version', '--new-version', releaseType])
+    }, {
+        enabled: () => !useYarn,
+        skip: () => {
+            if (preview) {
+                return `[Preview] command not executed: npm version ${releaseType}`
+            }
+        },
+        task: () => execa('npm', ['version', releaseType])
+    }])
 
     if (runPublish) {
         publisher.add([{
