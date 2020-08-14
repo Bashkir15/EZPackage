@@ -3,6 +3,7 @@ import execa from 'execa'
 
 import { ProjectConfig } from '../types'
 import { PUBLISH_STATUSES } from '../constants'
+import { hasUpstreamBranch } from './git'
 import { getGitTasks, getInitialTasks } from './tasks'
 
 
@@ -51,7 +52,7 @@ export async function publish(projectConfig: ProjectConfig) {
         task: () => execa('npm', ['version', releaseType]),
         title: 'Bumping package version with NPM'
     }])
-    
+
     if (runPublish) {
         // TODO Import the publish tasks dynamically
         
@@ -59,5 +60,26 @@ export async function publish(projectConfig: ProjectConfig) {
         publishStatus = PUBLISH_STATUSES.Success
     }
 
+    tasks.add({
+        skip: async () => {
+            const hasUpstream = await hasUpstreamBranch()
+            if (!hasUpstream) {
+                console.log('Upstream branch not found. Not pushing to Github')
+                return true
+            }
+            if (!runPublish) {
+                console.log(`[Preview] Command not executed: git push --follow-tags`)
+                return true
+            }
+            if (publishStatus === PUBLISH_STATUSES.Failed && runPublish) {
+                console.log(`Couldn't publish package to npm. Not pushing to Github`)
+                return true
+            }
+            return false
+        },
+        task: () => execa('git', ['push', '--follow-tags']),
+        title: 'Pushing tags and code to Github'
+    })
+    
     await tasks.run()
 }
