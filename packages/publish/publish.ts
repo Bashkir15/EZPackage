@@ -4,6 +4,7 @@ import execa from 'execa'
 import { ProjectConfig } from '../types'
 import { PUBLISH_STATUSES } from '../constants'
 import { hasUpstreamBranch } from './git'
+import { publishPackage } from './npm'
 import { getGitTasks, getInitialTasks } from './tasks'
 
 
@@ -54,7 +55,20 @@ export async function publish(projectConfig: ProjectConfig) {
     }])
 
     if (runPublish) {
-        // TODO Import the publish tasks dynamically
+        tasks.add([{
+            task: async () => {
+                let hasError = false
+                try {
+                    await publishPackage(useYarn ? 'yarn' : 'npm')
+                } catch (publishError) {
+                    hasError = true
+                    console.error(`Error publishing package:\n${publishError.message}`)
+                } finally {
+                    publishStatus = hasError ? PUBLISH_STATUSES.Failed : PUBLISH_STATUSES.Success
+                }
+            },
+            title: `Publishing package using ${useYarn ? 'yarn' : 'npm'}`
+        }])
         
     } else {
         publishStatus = PUBLISH_STATUSES.Success
@@ -80,6 +94,6 @@ export async function publish(projectConfig: ProjectConfig) {
         task: () => execa('git', ['push', '--follow-tags']),
         title: 'Pushing tags and code to Github'
     })
-    
+
     await tasks.run()
 }
