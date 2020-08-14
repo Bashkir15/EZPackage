@@ -32,8 +32,15 @@ export class PublishCommand implements Command {
     name = 'publish'
 
     async run(projectConfig: ProjectConfig): CommandResult {
+        let passedConfig = projectConfig
+
         const { publish } = await import('../publish/publish')
-        await publish(projectConfig)
+        if (projectConfig.interactive) {
+            const { publishUI } = await import('../publish/publish-ui')
+            passedConfig = await publishUI(projectConfig)
+        }
+
+        await publish(passedConfig)
         return { successful: true }
     }
 }
