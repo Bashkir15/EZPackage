@@ -33,7 +33,7 @@ export class HelpCommand implements Command {
         }])
     }
 
-    async run (projectConfig: ProjectConfig): CommandResult {
+    async run (projectConfig: ProjectConfig, { command }): CommandResult {
         console.log(this.generateGeneralUsage())
         return { successful: true }
     }

@@ -102,7 +102,7 @@ export interface Command {
     args: ArgDescriptor[]
     description: string
     name: string
-    run(projectConfig: ProjectConfig): CommandResult
+    run(projectConfig: ProjectConfig, commandContext?): CommandResult
 }
 
 /** 

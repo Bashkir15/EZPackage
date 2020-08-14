@@ -2,7 +2,7 @@ import env from 'std-env'
 
 import { ProjectConfig } from '../types'
 
-export default function createBaseConfig(rootDir) : ProjectConfig {
+export default function createBaseConfig(rootDir = '') : ProjectConfig {
     return {
         entries: {
             browser: null,

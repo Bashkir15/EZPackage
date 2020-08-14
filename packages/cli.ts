@@ -6,7 +6,7 @@ import { CliConfig, Command } from './types'
 import { BuildCommand } from './commands/Build'
 import { HelpCommand } from './commands/Help'
 import { PublishCommand } from './commands/Publish'
-import { getConfig } from './config'
+import { getDefaultConfig, getConfig } from './config'
 import { GLOBAL_CLI_ARGS } from './constants'
 
 import ownPackageJSON from '../package.json'
@@ -41,6 +41,7 @@ export class EZCli {
 
     async run() {
         const commandNames = Array.from(this.commands.keys())
+        const helpCommand = this.commands.get('help')
         let parsedArgs: ParsedCommand
 
         try {
@@ -49,7 +50,7 @@ export class EZCli {
             if (error.name === 'INVALID_COMMAND') {
                 if (error.command) {
                     console.error(`${error.command} is not an available command`)
-                    // TODO: Run help command
+                    return helpCommand.run(getDefaultConfig())
                 }
                 throw error
             }
@@ -63,7 +64,7 @@ export class EZCli {
         const config = await getConfig(commandOptions, ownPackageJSON.engines)
         
         if (commandOptions['help']) {
-            // TODO: Return help command
+            return helpCommand.run(config, { command: commandName })
         }
 
         return command.run(config)
