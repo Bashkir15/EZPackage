@@ -1,6 +1,5 @@
 import execa from 'execa'
 import memoizePromise from 'p-memoize'
-import pMemoize from 'p-memoize'
 
 export const getVersionTagPrefix = memoizePromise(async (useYarn: boolean) => {
     try {
