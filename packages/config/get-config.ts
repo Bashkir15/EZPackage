@@ -5,7 +5,7 @@ import parsePackageJSON from './parse-package'
 export default async function getConfig(context) {
     let config = getDefaultConfig(context)
     const packageJSON = await parsePackageJSON(config.paths.root)
-    config = { ...config, packageJSON }
+    config = { ...config, ...packageJSON }
 
     const userConfig = await loadUserConfig(config.paths)
     // Need to actually merge these.

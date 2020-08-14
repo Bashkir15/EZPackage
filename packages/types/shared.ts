@@ -1,3 +1,5 @@
+import { ArgDescriptor } from 'command-line-args'
+
 export interface ExtendableCustomObject {
     [key: string]: any;
 }
@@ -60,10 +62,11 @@ type ProjectOutput = {
 export interface CommonConfig {
     env?: StandardEnvironment;
     notify?: boolean;
+    output?: ProjectOutput;
     packageJSON?: PackageJSON;
     paths: {
         config?: string;
-        output?: ProjectOutput;
+        output?: string;
         root?: string;
     };
     runCleanup?: boolean;
@@ -104,7 +107,27 @@ export type ProjectConfig = BundleConfig & PublishConfig;
 
 export interface Command {
     aliases: string[];
+    args: ArgDescriptor[];
     description: string;
     name: string;
     run(projectConfig: ProjectConfig): Promise<void>;
+}
+
+export type CliArguments = {
+    browserEntry?: string
+    cliEntry?: string
+    configPath?: string
+    libraryEntry?: string
+    nodeEntry?: string
+    notify?: boolean
+    outputPath?: string
+    preview?: boolean
+    quiet?: boolean
+    rootPath?: string
+    runBuild?: boolean
+    runCleanup?: boolean
+    runTest?: boolean
+    testScript?: string
+    useYarn?: boolean
+    verbose?: boolean
 }
