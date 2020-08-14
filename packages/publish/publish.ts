@@ -5,7 +5,7 @@ import { ProjectConfig } from '../types'
 import { PUBLISH_STATUSES } from '../constants'
 import { hasUpstreamBranch } from './git'
 import { publishPackage } from './npm'
-import { getGitTasks, getInitialTasks, getTestTasks } from './tasks'
+import { getGitTasks, getInitialTasks, getTestTasks, getVersionTasks } from './tasks'
 
 
 export async function publish(projectConfig: ProjectConfig) {
@@ -37,26 +37,8 @@ export async function publish(projectConfig: ProjectConfig) {
     if (runTests) {
         tasks.add(getTestTasks(projectConfig))
     }
-    
-    tasks.add([{
-        enabled: () => useYarn,
-        skip: () => {
-            if (!runPublish) {
-                return `[Preview] Command not executed: yarn version --new-version ${releaseType}`
-            }
-        },
-        task: () => execa('yarn', ['version', '--new-version', releaseType]),
-        title: 'Bumping package version with Yarn'
-    }, {
-        enabled: () => !useYarn,
-        skip: () => {
-            if (!runPublish) {
-                return `[Preview] Command not executed: npm version ${releaseType}`
-            }
-        },
-        task: () => execa('npm', ['version', releaseType]),
-        title: 'Bumping package version with NPM'
-    }])
+
+    tasks.add(getVersionTasks(projectConfig))
 
     if (runPublish) {
         tasks.add([{
