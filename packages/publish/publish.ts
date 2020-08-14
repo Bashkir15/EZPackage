@@ -4,7 +4,7 @@ import { ProjectConfig } from '../types'
 import { getGitTasks, getInitialTasks } from './tasks'
 
 export async function publish(projectConfig: ProjectConfig) {
-    const { runBuild, runPublish } = projectConfig
+    const { runBuild, runCleanup, runPublish } = projectConfig
 
     const tasks = new Listr([{
         enabled: () => runPublish,
@@ -15,6 +15,11 @@ export async function publish(projectConfig: ProjectConfig) {
         title: 'Git Checks'
     }])
 
+    if (runCleanup) {
+        const { getCleanupTasks } = await import('./tasks/cleanup-tasks')
+        tasks.add(getCleanupTasks(projectConfig))
+    }
+    
     if (runBuild) {
         const { bundle } = await import('../bundler/bundle')
         tasks.add({
@@ -22,6 +27,6 @@ export async function publish(projectConfig: ProjectConfig) {
             title: 'Building project bundle'
         })
     }
-    
+
     await tasks.run()
 }
