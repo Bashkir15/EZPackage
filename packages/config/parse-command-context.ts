@@ -1,7 +1,9 @@
-import { CliArguments, ProjectConfig } from '../types/shared'
+import path from 'path'
 
-export default function parseCommandContext(context: CliArguments, passedConfig: ProjectConfig): ProjectConfig {
-    const config = passedConfig
+import { CliConfig, ProjectConfig } from '../types'
+
+export default function parseCommandContext(context: CliConfig, defaultConfig: ProjectConfig): ProjectConfig {
+    const config = defaultConfig
     const {
         browserEntry,
         cliEntry,
@@ -20,9 +22,8 @@ export default function parseCommandContext(context: CliArguments, passedConfig:
     if (nodeEntry) config.entries.node = nodeEntry
 
     // Parse for paths
-    if (configPath) config.paths.config = context.configPath
-    if (outputPath) config.paths.output = context.outputPath
-    if (rootPath) config.paths.root = context.rootPath
+    if (configPath) config.paths.config = path.resolve(config.paths.root, context.configPath)
+    if (outputPath) config.paths.output = path.resolve(config.paths.root, context.outputPath)
 
     return {
         ...config,

@@ -1,18 +1,31 @@
-import { BundlerTask } from '../../types/bundler'
-import { ProjectConfig } from '../../types/shared'
-
+import { BundlerPackageOutput, BundlerTasks, ProjectConfig } from '../../types'
 import { createRollupConfig } from './config'
 
+type BundleConfig = {
+    banner: string,
+    output: BundlerPackageOutput
+}
 
-export default function createRollupTasks(projectConfig: ProjectConfig): BundlerTask[] {
-    const { entries, tsConfig, ...base } = projectConfig
-    const { 
-        packageJSON: { 
-            name,
-            version
-        },
-        paths: { output }, watch 
-    } = base
+export default function createRollupTasks(projectConfig: ProjectConfig, bundleConfig: BundleConfig): BundlerTasks {
+    const {
+        env,
+        entries,
+        packageJSON: { author, dependencies, name, version },
+        paths,
+        sourcemap,
+        tsConfig,
+        watch
+    } = projectConfig
+    const { banner, output } = bundleConfig
+
+    const base = {
+        banner,
+        env,
+        packageJSON: { author, dependencies, name, version },
+        paths,
+        sourcemap,
+        watch
+    }
 
     let tasks = []
 
@@ -82,15 +95,5 @@ export default function createRollupTasks(projectConfig: ProjectConfig): Bundler
         }, [])
     }
 
-    // Return the tasks and their corresponding rollup configuration objects
-    return tasks.map(task => ({
-        rollupConfig: createRollupConfig(task),
-        taskInfo: {
-            format: task.format,
-            input: task.input,
-            name,
-            output: task.output,
-            version,
-        }
-    }))
+    return tasks.map(task => createRollupConfig(task))
 }

@@ -1,3 +1,5 @@
+export const CONFIG_FILE_LOCATIONS = ['.ez-config.json', '.ez-config.js', 'package.json']
+
 export const PACKAGE_LOCKFILES = ['yarn.lock', 'package-lock.json', 'npm-shrinkwrap.json']
 export const NPM_REGISTRY_TIMEOUT = 15000
 export const PRERELEASE_VERSIONS = ['prepatch', 'preminor', 'premajor', 'prerelease']
@@ -11,6 +13,7 @@ export enum PUBLISH_STATUSES {
     Unknown = 'UNKNOWN'
 }
 
+export const SHEBANG = '#!/usr/bin/env node'
 export const TYPESCRIPT_EXTENSIONS = ['.ts', '.tsx']
 export const SCRIPT_EXTENSIONS = ['.js', '.jsx', '.mjs', ...TYPESCRIPT_EXTENSIONS]
 

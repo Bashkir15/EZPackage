@@ -20,6 +20,7 @@
     "chalk": "^4.1.0",
     "command-line-args": "^5.1.1",
     "command-line-commands": "^3.0.1",
+    "command-line-usage": "^6.1.0",
     "cosmiconfig": "^7.0.0",
     "escape-string-regexp": "^4.0.0",
     "execa": "^4.0.3",
@@ -28,6 +29,7 @@
     "p-memoize": "^4.0.0",
     "p-timeout": "^3.2.0",
     "path": "^0.12.7",
+    "pkg-dir": "^4.2.0",
     "rollup": "^2.23.1",
     "semver": "^7.3.2",
     "std-env": "^2.2.1"

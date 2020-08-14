@@ -1,9 +1,10 @@
 import commandLineArgs, { ArgDescriptor } from 'command-line-args'
-import commandLineCommands from 'command-line-commands'
+import commandLineCommands, { ParsedCommand } from 'command-line-commands'
 
-import { Command } from './types/shared'
+import { CliConfig, Command } from './types'
 
 import { BuildCommand } from './commands/Build'
+import { HelpCommand } from './commands/Help'
 import { PublishCommand } from './commands/Publish'
 import { getConfig } from './config'
 import { GLOBAL_CLI_ARGS } from './constants'
@@ -25,6 +26,7 @@ export class EZCli {
     constructor(args: string[]) {
         this.args = args
         this.addCommand(new BuildCommand())
+        this.addCommand(new HelpCommand())
         this.addCommand(new PublishCommand())
     }
 
@@ -37,7 +39,7 @@ export class EZCli {
 
     async run() {
         const commandNames = Array.from(this.commands.keys())
-        let parsedArgs
+        let parsedArgs: ParsedCommand
 
         try {
             parsedArgs = commandLineCommands(commandNames, this.args)
@@ -53,8 +55,9 @@ export class EZCli {
 
         const { argv: commandArgs, command: commandName } = parsedArgs
         const command = this.commands.get(commandName)
-        const commandDefinitions = mergeArguments([command.args, GLOBAL_CLI_ARGS])
-        const commandOptions = commandLineArgs(commandDefinitions, { argv: commandArgs })
+        const commandDefinitions: ArgDescriptor[] = mergeArguments([command.args, GLOBAL_CLI_ARGS])
+        const commandOptions: CliConfig = commandLineArgs(commandDefinitions, { argv: commandArgs })
+        
         const config = await getConfig(commandOptions)
         
         if (commandOptions['help']) {

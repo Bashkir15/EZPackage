@@ -1,4 +1,4 @@
-import { Command, ProjectConfig } from '../types/shared'
+import { Command, CommandResult, ProjectConfig } from '../types'
 
 export class PublishCommand implements Command {
     aliases = []
@@ -27,11 +27,11 @@ export class PublishCommand implements Command {
         name: 'testScript',
         type: String
     }]
-    
+
     description = 'Publish a package to npm'
     name = 'publish'
 
-    async run(projectConfig: ProjectConfig) {
+    async run(projectConfig: ProjectConfig): CommandResult {
         const { publish } = await import('../publish/publish')
         // handle publish
     }

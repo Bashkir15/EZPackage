@@ -9,14 +9,15 @@ import nodeResolvePlugin from '@rollup/plugin-node-resolve'
 import replacePlugin from '@rollup/plugin-replace'
 import { RollupOptions} from 'rollup'
 
-import { SCRIPT_EXTENSIONS } from '../../../constants'
+import { RollupTask } from '../../../types'
+import { SCRIPT_EXTENSIONS, SHEBANG } from '../../../constants'
 import createDependencyManager from './createDependencyManager'
 import getRollupEnv from './getRollupEnv'
 
 let cache
 
 // This can be async  if needed for dynamic loading of plugins/library stuff
-export default function createRollupConfig(options) : RollupOptions {
+export default function createRollupConfig(options: RollupTask) : RollupOptions {
     const {
         banner,
         env,
@@ -50,6 +51,7 @@ export default function createRollupConfig(options) : RollupOptions {
             return console.error(chalk.red(loggedMessage))
         },
         output: {
+            banner: target === 'cli' ? `${SHEBANG}\n\n${banner}` : banner,
             file: path.join(paths.root, output),
             format,
             name,

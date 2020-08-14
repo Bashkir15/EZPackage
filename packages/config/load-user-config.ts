@@ -1,11 +1,11 @@
 import { cosmiconfig } from 'cosmiconfig'
 
-import { ProjectConfig } from '../types/shared'
+import { ProjectConfig } from '../types'
 
-export default async function loadUserConfig(paths): Promise<ProjectConfig> {
-    const searchPlaces = ['.ez-config.json', '.ez-config.js', 'package.json']
-    if (paths.configPath) searchPlaces.unshift(paths.configPath)
-    
+import { CONFIG_FILE_LOCATIONS } from '../constants'
+
+export default async function loadUserConfig(paths: { config?: string, root: string }): Promise<ProjectConfig> {
+    const searchPlaces = paths.config ? [paths.config] : CONFIG_FILE_LOCATIONS
     const explorer = cosmiconfig('ez', {
         searchPlaces,
         stopDir: paths.root

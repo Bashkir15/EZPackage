@@ -1,4 +1,4 @@
-import { Command } from '../types/shared'
+import { Command, CommandResult, ProjectConfig } from '../types'
 
 export class BuildCommand implements Command {
     aliases = []
@@ -30,7 +30,7 @@ export class BuildCommand implements Command {
     description = 'Builds a project'
     name = 'build'
 
-    async run(projectConfig) {
+    async run(projectConfig: ProjectConfig): CommandResult {
         const { bundle } = await import('../bundler/bundle')
         return bundle(projectConfig)
     }

@@ -1,25 +1,15 @@
 import env from 'std-env'
 
-import { ProjectConfig } from '../types/shared'
+import { ProjectConfig } from '../types'
 
-export default function createBaseConfig(args) : ProjectConfig {
+export default function createBaseConfig(rootDir) : ProjectConfig {
     return {
-        // Allows publishing from any branch
-        anyBranch: false,
-        // Name of the release branch
-        branch: 'master',
-        // Cleanup node_moudules and build files after
-        cleanup: true,
-        // Sub directory to publish
-        contents: '.',
         entries: {
             browser: null,
             cli: null,
             library: null,
             node: null
         },
-        // Enable 2FA on new packages
-        enableTwoFactor: true,
         env,
         exec: false,
         notify: false,
@@ -39,21 +29,15 @@ export default function createBaseConfig(args) : ProjectConfig {
             version: '0.0.0'
         },
         paths: {
-            output: null,
-            root: process.cwd()
+            config: '',
+            output: '',
+            root: rootDir,
+            test: ''
         },
         // Show tasks without executing them
         preview: false,
-        // Open a github release draft after releasing
-        releaseDraft: true,
         // Function to override rollup configuration
         rollup: (passedConfig = {}, options) => passedConfig,
-        // Whether test scripts should be skipped before publishing/building
-        skipTests: false,
-        // Publish under a givien dist-tag
-        tag: 'latest',
-        // Name of the test script to run
-        testScript: 'test',
         quiet: false,
         verbose: false,
         watch: false,
