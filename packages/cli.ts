@@ -26,7 +26,7 @@ export class EZCli {
     constructor(args: string[]) {
         this.args = args
         this.addCommand(new BuildCommand())
-        this.addCommand(new HelpCommand())
+        this.addCommand(new HelpCommand(this.commands))
         this.addCommand(new PublishCommand())
     }
 

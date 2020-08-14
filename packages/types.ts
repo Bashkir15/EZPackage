@@ -79,13 +79,14 @@ export interface ProjectConfig extends SharedConfig {
     tsConfig?: {
         [key: string]: any
     }
+    useExternalRegistry?: boolean
 }
 
 /**
  * Command Configuration
  */
 
-export type CommandResult = Promise<void|{ successful: boolean }>
+export type CommandResult = Promise<{ successful: boolean }>
 
 export interface Command {
     aliases: string[]

@@ -18,7 +18,7 @@ export default function createDependencyManager({ dependencies, input }) {
         return (/\0/).exec(file)
     }
 
-    function dependencyToPackageName(dep) {
+    function dependencyToPackageName(dep: string): string {
         if (!dep.includes('/')) return dep
 
         const isScoped = dep.startsWith('@')
@@ -28,7 +28,7 @@ export default function createDependencyManager({ dependencies, input }) {
             .join('/')
     }
 
-    function importerToPackageName(file) {
+    function importerToPackageName(file: string): string {
         if (file.endsWith('?commonjs-external')) {
             return file.slice(0, -18)
         }
@@ -43,7 +43,7 @@ export default function createDependencyManager({ dependencies, input }) {
         return packageName
     }
 
-    function shouldInlineDependency(passedDep, importer) {
+    function shouldInlineDependency(passedDep: string, importer: string): boolean {
         const packageName = dependencyToPackageName(passedDep)
         // If it is listed in runtime or peer dependencies then we assume
         // the owner does not want to bundle it
@@ -81,7 +81,7 @@ export default function createDependencyManager({ dependencies, input }) {
         return true
     }
 
-    return function manageDependency(dependency, importer) {
+    return function manageDependency(dependency: string, importer: string): boolean {
         const inlineDependency = dependency === input || isRelativeDependency(dependency) || path.isAbsolute(dependency)
         if (!inlineDependency) {
             if (!BuiltIns.has(dependency)) {

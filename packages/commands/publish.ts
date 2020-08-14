@@ -33,6 +33,7 @@ export class PublishCommand implements Command {
 
     async run(projectConfig: ProjectConfig): CommandResult {
         const { publish } = await import('../publish/publish')
-        // handle publish
+        await publish(projectConfig)
+        return { successful: true }
     }
 }
