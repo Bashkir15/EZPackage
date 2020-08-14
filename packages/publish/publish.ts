@@ -1,10 +1,12 @@
 import Listr from 'listr'
 
 import { ProjectConfig } from '../types'
+import { PUBLISH_STATUSES } from '../constants'
 import { getGitTasks, getInitialTasks } from './tasks'
 
 export async function publish(projectConfig: ProjectConfig) {
     const { runBuild, runCleanup, runPublish } = projectConfig
+    let publishStatus = PUBLISH_STATUSES.Unknown
 
     const tasks = new Listr([{
         enabled: () => runPublish,
@@ -19,7 +21,7 @@ export async function publish(projectConfig: ProjectConfig) {
         const { getCleanupTasks } = await import('./tasks/cleanup-tasks')
         tasks.add(getCleanupTasks(projectConfig))
     }
-    
+
     if (runBuild) {
         const { bundle } = await import('../bundler/bundle')
         tasks.add({
@@ -28,5 +30,12 @@ export async function publish(projectConfig: ProjectConfig) {
         })
     }
 
+    if (runPublish) {
+        // TODO Import the publish tasks dynamically
+        
+    } else {
+        publishStatus = PUBLISH_STATUSES.Success
+    }
+    
     await tasks.run()
 }
