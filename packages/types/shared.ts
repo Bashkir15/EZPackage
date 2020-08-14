@@ -25,6 +25,13 @@ export type PackageDependencies = ExtendableCustomObject & {
     runtime: PackageDependencyType;
 };
 
+export type PackageEngines = {
+    git?: string
+    node?: string
+    yarn?: string
+    [key: string]: string
+}
+
 export interface PackageJSON extends ExtendableCustomObject {
     author?: string | {
         email?: string;
@@ -59,6 +66,7 @@ export interface CommonConfig {
         output?: ProjectOutput;
         root?: string;
     };
+    runCleanup?: boolean;
     quiet?: boolean;
     verbose?: boolean;
     useYarn?: boolean;
@@ -80,16 +88,23 @@ export interface BundleConfig extends CommonConfig {
 export interface PublishConfig extends CommonConfig {
     anyBranch?: boolean;
     branch?: string;
-    cleanup?: boolean;
     contents?: string;
     enableTwoFactor?: boolean;
     preview?: boolean;
     releaseDraft?: boolean;
     // Make this actual valid release types
     releaseType?: string;
-    skipTests?: boolean;
+    runBuild?: boolean;
+    runPublish?: boolean;
     tag?: string;
     testScript?: string;
 };
 
 export type ProjectConfig = BundleConfig & PublishConfig;
+
+export interface Command {
+    aliases: string[];
+    description: string;
+    name: string;
+    run(projectConfig: ProjectConfig): Promise<void>;
+}

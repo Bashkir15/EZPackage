@@ -1,6 +1,12 @@
-import { bundle } from '../bundler'
+import { Command } from '../types/shared'
 
-export default async function build(projectConfig) {
-    // Do something more here?
-    await bundle(projectConfig)
+export class BuildCommand implements Command {
+    aliases = []
+    description = 'Builds a project'
+    name = 'build'
+
+    async run(projectConfig) {
+        const { bundle } = await import('../bundler/bundle')
+        return bundle(projectConfig)
+    }
 }

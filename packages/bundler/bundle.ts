@@ -3,7 +3,7 @@ import { ProjectConfig } from '../types/shared'
 
 import { createRollupTasks, executeRollupCompile, executeRollupWatch } from './rollup'
 
-export default async function bundle(projectConfig: ProjectConfig) {
+export async function bundle(projectConfig: ProjectConfig) {
     const { packageJSON: { name, version }, watch } = projectConfig
 
     // This could just be the task title? 
