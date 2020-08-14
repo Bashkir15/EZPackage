@@ -27,8 +27,8 @@ export type ProjectEngineRequirements = {
 
 export interface SharedConfig {
     exec?: boolean
+    interactive?: boolean
     notify?: boolean
-    preview?: boolean
     quiet?: boolean
     releaseType?: string
     runBuild?: boolean

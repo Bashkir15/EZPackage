@@ -32,6 +32,12 @@ export class BuildCommand implements Command {
 
     async run(projectConfig: ProjectConfig): CommandResult {
         const { bundle } = await import('../bundler/bundle')
-        return bundle(projectConfig)
+        let passedConfig = projectConfig
+        if (projectConfig.interactive) {
+            const { bundlerUI } =  await import('../bundler/bundler-ui')
+            passedConfig = await bundlerUI(projectConfig)
+        }
+
+        return bundle(passedConfig)
     }
 }

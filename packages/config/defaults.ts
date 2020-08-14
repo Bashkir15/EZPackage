@@ -12,6 +12,7 @@ export default function createBaseConfig(rootDir = '') : ProjectConfig {
         },
         env,
         exec: false,
+        interactive: true,
         notify: false,
         packageJSON: {
             author: '',
@@ -34,8 +35,6 @@ export default function createBaseConfig(rootDir = '') : ProjectConfig {
             root: rootDir,
             test: ''
         },
-        // Show tasks without executing them
-        preview: false,
         // Function to override rollup configuration
         rollup: (passedConfig = {}, options) => passedConfig,
         quiet: false,
