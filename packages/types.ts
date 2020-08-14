@@ -30,6 +30,7 @@ export interface SharedConfig {
     runPublish?: boolean
     runTests?: boolean
     sourcemap?: boolean
+    testCommand?: string
     useYarn?: boolean
     verbose?: boolean
     watch?: boolean

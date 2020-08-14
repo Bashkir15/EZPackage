@@ -5,11 +5,11 @@ import { ProjectConfig } from '../types'
 import { PUBLISH_STATUSES } from '../constants'
 import { hasUpstreamBranch } from './git'
 import { publishPackage } from './npm'
-import { getGitTasks, getInitialTasks } from './tasks'
+import { getGitTasks, getInitialTasks, getTestTasks } from './tasks'
 
 
 export async function publish(projectConfig: ProjectConfig) {
-    const { releaseType, runBuild, runCleanup, runPublish, useYarn } = projectConfig
+    const { releaseType, runBuild, runCleanup, runPublish, runTests, useYarn } = projectConfig
     let publishStatus = PUBLISH_STATUSES.Unknown
 
     const tasks = new Listr([{
@@ -34,6 +34,10 @@ export async function publish(projectConfig: ProjectConfig) {
         })
     }
 
+    if (runTests) {
+        tasks.add(getTestTasks(projectConfig))
+    }
+    
     tasks.add([{
         enabled: () => useYarn,
         skip: () => {
