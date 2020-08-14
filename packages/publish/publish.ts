@@ -1,11 +1,13 @@
 import Listr from 'listr'
+import execa from 'execa'
 
 import { ProjectConfig } from '../types'
 import { PUBLISH_STATUSES } from '../constants'
 import { getGitTasks, getInitialTasks } from './tasks'
 
+
 export async function publish(projectConfig: ProjectConfig) {
-    const { runBuild, runCleanup, runPublish } = projectConfig
+    const { releaseType, runBuild, runCleanup, runPublish, useYarn } = projectConfig
     let publishStatus = PUBLISH_STATUSES.Unknown
 
     const tasks = new Listr([{
@@ -30,12 +32,32 @@ export async function publish(projectConfig: ProjectConfig) {
         })
     }
 
+    tasks.add([{
+        enabled: () => useYarn,
+        skip: () => {
+            if (!runPublish) {
+                return `[Preview] Command not executed: yarn version --new-version ${releaseType}`
+            }
+        },
+        task: () => execa('yarn', ['version', '--new-version', releaseType]),
+        title: 'Bumping package version with Yarn'
+    }, {
+        enabled: () => !useYarn,
+        skip: () => {
+            if (!runPublish) {
+                return `[Preview] Command not executed: npm version ${releaseType}`
+            }
+        },
+        task: () => execa('npm', ['version', releaseType]),
+        title: 'Bumping package version with NPM'
+    }])
+    
     if (runPublish) {
         // TODO Import the publish tasks dynamically
         
     } else {
         publishStatus = PUBLISH_STATUSES.Success
     }
-    
+
     await tasks.run()
 }

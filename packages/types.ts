@@ -24,7 +24,7 @@ export interface SharedConfig {
     notify?: boolean
     preview?: boolean
     quiet?: boolean
-    releaseType?: boolean
+    releaseType?: string
     runBuild?: boolean
     runCleanup?: boolean
     runPublish?: boolean
