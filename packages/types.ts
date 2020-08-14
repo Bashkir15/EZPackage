@@ -18,6 +18,12 @@ export type ProjectPaths = {
     root: string
     test?: string
 }
+export type ProjectEngineRequirements = {
+    git: string
+    node: string
+    npm: string
+    yarn: string
+}
 
 export interface SharedConfig {
     exec?: boolean
@@ -76,6 +82,7 @@ export interface ProjectConfig extends SharedConfig {
         version?: string
     }
     paths: ProjectPaths
+    requiredEngines?: ProjectEngineRequirements
     // TODO Rollup typing
     rollup: RollupOverride
     tsConfig?: {

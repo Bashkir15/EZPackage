@@ -9,6 +9,8 @@ import { PublishCommand } from './commands/Publish'
 import { getConfig } from './config'
 import { GLOBAL_CLI_ARGS } from './constants'
 
+import ownPackageJSON from '../package.json'
+
 function mergeArguments(argumentsList: ArgDescriptor[][]): ArgDescriptor[] {
     const argsByName = new Map<string, ArgDescriptor>()
     for (const args of argumentsList) {
@@ -58,7 +60,7 @@ export class EZCli {
         const commandDefinitions: ArgDescriptor[] = mergeArguments([command.args, GLOBAL_CLI_ARGS])
         const commandOptions: CliConfig = commandLineArgs(commandDefinitions, { argv: commandArgs })
         
-        const config = await getConfig(commandOptions)
+        const config = await getConfig(commandOptions, ownPackageJSON.engines)
         
         if (commandOptions['help']) {
             // TODO: Return help command
